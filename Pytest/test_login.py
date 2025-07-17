@@ -4,9 +4,8 @@ import json
 def load_data():
     with open("test.json","r") as file:
         return json.load(file)
-
-def test_1(driver):
-    data=load_data()[0]
+@pytest.mark.parametrize("data",load_data())
+def test_1(driver,data):
     import time
     from selenium.webdriver import Keys
     from selenium.webdriver.common.by import By

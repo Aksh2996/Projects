@@ -12,5 +12,19 @@
     "state": "NCR",
     "city": "Delhi",
     "photo_path": "C:/Users/DELL/OneDrive/Documents/Pictures/PHOTO_FOR_ID_CARD.jpg"
+  },
+  {
+    "first_name": "Neha",
+    "last_name": "Sharma",
+    "email": "neha.sharma@gmail.com",
+    "gender": "Female",
+    "phone": "9876543210",
+    "dob_label": "Choose Tuesday, July 1st, 2025",
+    "subject": "English",
+    "hobby": "Reading",
+    "photo_path": "C:/Users/DELL/OneDrive/Documents/Pictures/PHOTO_FOR_ID_CARD.jpg",
+    "address": "Address 2",
+    "state": "Uttar Pradesh",
+    "city": "Lucknow"
   }
 ]
