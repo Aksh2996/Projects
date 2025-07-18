@@ -1,6 +1,9 @@
 import pytest
 import json
 
+from selenium.webdriver.support.select import Select
+
+
 def load_data():
     with open("test.json","r") as file:
         return json.load(file)
@@ -25,19 +28,24 @@ def test_1(driver,data):
     driver.execute_script("arguments[0].click();", a)
     driver.find_element(By.XPATH, "(//input[@placeholder='name@example.com'])").send_keys(data["email"])
     driver.find_element(By.XPATH, f"(//label[text()='{data['gender']}'])").click()
-    driver.find_element(By.CSS_SELECTOR, "#userNumber").send_keys(data["phone"])
-
-    # Open the date picker input
-    date_input = driver.find_element(By.CSS_SELECTOR, "#dateOfBirthInput")
+    #added
+    date_input = wait.until(EC.element_to_be_clickable((By.ID, "dateOfBirthInput")))
     driver.execute_script("arguments[0].scrollIntoView(true);", date_input)
-    driver.execute_script("arguments[0].click();", date_input)  # JS click avoids interception
-
-    # Wait for the date picker popup to be visible and clickable
-    b = wait.until(EC.element_to_be_clickable((By.XPATH, f"//div[@aria-label='{data['dob_label']}']")))
-
-    # Scroll to and click the date
-    driver.execute_script("arguments[0].scrollIntoView(true);", b)
-    driver.execute_script("arguments[0].click();", b)
+    date_input.click()
+    year_dropdown = wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "react-datepicker__year-select")))
+    Select(year_dropdown).select_by_value(data["dob_year"])
+    month_dropdown = driver.find_element(By.CLASS_NAME, "react-datepicker__month-select")
+    Select(month_dropdown).select_by_value(data["dob_month"])
+    day_picker = WebDriverWait(driver, 5).until(
+        EC.visibility_of_element_located((
+            By.XPATH,
+            f"//div[contains(@class, 'react-datepicker__day--0{int(data['dob_date']):02d}') "  # zero-padded day
+            f"and not(contains(@class, 'react-datepicker__day--outside-month'))]"
+        ))
+    )
+    day_picker.click()
+    #added
+    driver.find_element(By.CSS_SELECTOR, "#userNumber").send_keys(data["phone"])
     hobby_checkbox = driver.find_element(By.XPATH,f"(//label[text()='{data['hobby']}'])")
     driver.execute_script("arguments[0].click();", hobby_checkbox)
     driver.find_element(By.CSS_SELECTOR, "#uploadPicture").send_keys(data["photo_path"])
