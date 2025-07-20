@@ -24,6 +24,9 @@ def test_2():
     driver.find_element(By.CSS_SELECTOR,".product_sort_container").click()
     driver.find_element(By.XPATH,"//option[text()='Price (high to low)']").click()
     driver.find_element(By.CSS_SELECTOR,"#add-to-cart-sauce-labs-fleece-jacket").click()
+    a=driver.find_element(By.XPATH,"//div[text()='29.99']").text
+    print(a)
+    assert a=="$29.99"
     driver.find_element(By.CSS_SELECTOR,"button[name='add-to-cart-sauce-labs-backpack']").click()
     driver.find_element(By.CSS_SELECTOR,"a[class='shopping_cart_link']").click()
     driver.find_element(By.XPATH,"//button[text()='Checkout']").click()
