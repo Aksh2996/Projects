@@ -3,11 +3,332 @@
   <head>
     <meta charset="utf-8"/>
     <title id="head-title">report.html</title>
-      <link href="assets\style.css" rel="stylesheet" type="text/css"/>
+      <style type="text/css">body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  /* do not increase min-width as some may use split screens */
+  min-width: 800px;
+  color: #999;
+}
+
+h1 {
+  font-size: 24px;
+  color: black;
+}
+
+h2 {
+  font-size: 16px;
+  color: black;
+}
+
+p {
+  color: black;
+}
+
+a {
+  color: #999;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+#environment td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  vertical-align: top;
+}
+#environment tr:nth-child(odd) {
+  background-color: #f6f6f6;
+}
+#environment ul {
+  margin: 0;
+  padding: 0 20px;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed,
+.passed .col-result {
+  color: green;
+}
+
+span.skipped,
+span.xfailed,
+span.rerun,
+.skipped .col-result,
+.xfailed .col-result,
+.rerun .col-result {
+  color: orange;
+}
+
+span.error,
+span.failed,
+span.xpassed,
+.error .col-result,
+.failed .col-result,
+.xpassed .col-result {
+  color: red;
+}
+
+.col-links__extra {
+  margin-right: 3px;
+}
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+#results-table {
+  border: 1px solid #e6e6e6;
+  color: #999;
+  font-size: 12px;
+  width: 100%;
+}
+#results-table th,
+#results-table td {
+  padding: 5px;
+  border: 1px solid #e6e6e6;
+  text-align: left;
+}
+#results-table th {
+  font-weight: bold;
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+.logwrapper {
+  max-height: 230px;
+  overflow-y: scroll;
+  background-color: #e6e6e6;
+}
+.logwrapper.expanded {
+  max-height: none;
+}
+.logwrapper.expanded .logexpander:after {
+  content: "collapse [-]";
+}
+.logwrapper .logexpander {
+  z-index: 1;
+  position: sticky;
+  top: 10px;
+  width: max-content;
+  border: 1px solid;
+  border-radius: 3px;
+  padding: 5px 7px;
+  margin: 10px 0 10px calc(100% - 80px);
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+.logwrapper .logexpander:after {
+  content: "expand [+]";
+}
+.logwrapper .logexpander:hover {
+  color: #000;
+  border-color: #000;
+}
+.logwrapper .log {
+  min-height: 40px;
+  position: relative;
+  top: -50px;
+  height: calc(100% + 50px);
+  border: 1px solid #e6e6e6;
+  color: black;
+  display: block;
+  font-family: "Courier New", Courier, monospace;
+  padding: 5px;
+  padding-right: 80px;
+  white-space: pre-wrap;
+}
+
+div.media {
+  border: 1px solid #e6e6e6;
+  float: right;
+  height: 240px;
+  margin: 0 5px;
+  overflow: hidden;
+  width: 320px;
+}
+
+.media-container {
+  display: grid;
+  grid-template-columns: 25px auto 25px;
+  align-items: center;
+  flex: 1 1;
+  overflow: hidden;
+  height: 200px;
+}
+
+.media-container--fullscreen {
+  grid-template-columns: 0px auto 0px;
+}
+
+.media-container__nav--right,
+.media-container__nav--left {
+  text-align: center;
+  cursor: pointer;
+}
+
+.media-container__viewport {
+  cursor: pointer;
+  text-align: center;
+  height: inherit;
+}
+.media-container__viewport img,
+.media-container__viewport video {
+  object-fit: cover;
+  width: 100%;
+  max-height: 100%;
+}
+
+.media__name,
+.media__counter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex: 0 0 25px;
+  align-items: center;
+}
+
+.collapsible td:not(.col-links) {
+  cursor: pointer;
+}
+.collapsible td:not(.col-links):hover::after {
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.col-result {
+  width: 130px;
+}
+.col-result:hover::after {
+  content: " (hide details)";
+}
+
+.col-result.collapsed:hover::after {
+  content: " (show details)";
+}
+
+#environment-header h2:hover::after {
+  content: " (hide details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+#environment-header.collapsed h2:hover::after {
+  content: " (show details)";
+  color: #bbb;
+  font-style: italic;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+  cursor: pointer;
+}
+.sortable.desc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: -12.5px;
+  border: 10px solid #4caf50;
+  border-bottom: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+.sortable.asc:after {
+  content: " ";
+  position: relative;
+  left: 5px;
+  bottom: 12.5px;
+  border: 10px solid #4caf50;
+  border-top: 0;
+  border-left-color: transparent;
+  border-right-color: transparent;
+}
+
+.hidden, .summary__reload__button.hidden {
+  display: none;
+}
+
+.summary__data {
+  flex: 0 0 550px;
+}
+.summary__reload {
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+}
+.summary__reload__button {
+  flex: 0 0 300px;
+  display: flex;
+  color: white;
+  font-weight: bold;
+  background-color: #4caf50;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.summary__reload__button:hover {
+  background-color: #46a049;
+}
+.summary__spacer {
+  flex: 0 0 550px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filters,
+.collapse {
+  display: flex;
+  align-items: center;
+}
+.filters button,
+.collapse button {
+  color: #999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.filters button:hover,
+.collapse button:hover {
+  color: #ccc;
+}
+
+.filter__label {
+  margin-right: 10px;
+}
+
+      </style>
+    
   </head>
   <body>
     <h1 id="title">report.html</h1>
-    <p>Report generated on 23-Jul-2025 at 13:31:15 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
+    <p>Report generated on 23-Jul-2025 at 23:22:41 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a>
         v4.1.1</p>
     <div id="environment-header">
       <h2>Environment</h2>
@@ -61,7 +382,7 @@
         <h2>Summary</h2>
         <div class="additional-summary prefix">
         </div>
-        <p class="run-count">5 tests took 00:01:56.</p>
+        <p class="run-count">8 tests took 00:02:15.</p>
         <p class="filter">(Un)check the boxes to filter the results.</p>
         <div class="summary__reload">
           <div class="summary__reload__button hidden" onclick="location.reload()">
@@ -71,12 +392,12 @@
         <div class="summary__spacer"></div>
         <div class="controls">
           <div class="filters">
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" disabled/>
-            <span class="failed">0 Failed,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="failed" />
+            <span class="failed">3 Failed,</span>
             <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="passed" />
             <span class="passed">5 Passed,</span>
-            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" />
-            <span class="skipped">3 Skipped,</span>
+            <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="skipped" disabled/>
+            <span class="skipped">0 Skipped,</span>
             <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xfailed" disabled/>
             <span class="xfailed">0 Expected failures,</span>
             <input checked="true" class="filter" name="filter_checkbox" type="checkbox" data-test-result="xpassed" disabled/>
@@ -108,7 +429,7 @@
     </table>
   </body>
   <footer>
-    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.9.5&#34;, &#34;Platform&#34;: &#34;Windows-10-10.0.26100-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.4.1&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;html&#34;: &#34;4.1.1&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}, &#34;JAVA_HOME&#34;: &#34;C:\\Program Files\\Java\\jdk-17.x.x\\&#34;}, &#34;tests&#34;: {&#34;test_ecommlogin.py::test_2[data0]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data0]&#34;, &#34;duration&#34;: &#34;00:00:13&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data0]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:13&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_ecommlogin.py::test_2[data1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data1]&#34;, &#34;duration&#34;: &#34;00:00:08&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:08&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;C:\\\\Users\\\\DELL\\\\PycharmProjects\\\\Pythonseleniumhandson\\\\pytest\\\\test_ecommlogin.py&amp;#x27;, 58, &amp;#x27;Skipped: skips:Message: no such element: Unable to locate element: {&amp;quot;method&amp;quot;:&amp;quot;css selector&amp;quot;,&amp;quot;selector&amp;quot;:&amp;quot;.product_sort_container&amp;quot;}\\n  (Session info: chrome=138.0.7204.158); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception\\nStacktrace:\\n\\tGetHandleVerifier [0x0x7ff6fdbe6f65+78965]\\n\\tGetHandleVerifier [0x0x7ff6fdbe6fc0+79056]\\n\\t(No symbol) [0x0x7ff6fd979dda]\\n\\t(No symbol) [0x0x7ff6fd9d02ea]\\n\\t(No symbol) [0x0x7ff6fd9d059c]\\n\\t(No symbol) [0x0x7ff6fda23f37]\\n\\t(No symbol) [0x0x7ff6fd9f86af]\\n\\t(No symbol) [0x0x7ff6fda20dbe]\\n\\t(No symbol) [0x0x7ff6fd9f8443]\\n\\t(No symbol) [0x0x7ff6fd9c1311]\\n\\t(No symbol) [0x0x7ff6fd9c20a3]\\n\\tGetHandleVerifier [0x0x7ff6fde9e26d+2926461]\\n\\tGetHandleVerifier [0x0x7ff6fde98993+2903715]\\n\\tGetHandleVerifier [0x0x7ff6fdeb6aed+3026941]\\n\\tGetHandleVerifier [0x0x7ff6fdc016fe+187406]\\n\\tGetHandleVerifier [0x0x7ff6fdc096ef+220159]\\n\\tGetHandleVerifier [0x0x7ff6fdbefaf4+114692]\\n\\tGetHandleVerifier [0x0x7ff6fdbefca9+115129]\\n\\tGetHandleVerifier [0x0x7ff6fdbd64d8+10728]\\n\\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\\n\\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]&amp;#x27;)\n\n----------------------------- Captured stdout call -----------------------------\nyesyesys:Message: no such element: Unable to locate element: {&amp;quot;method&amp;quot;:&amp;quot;css selector&amp;quot;,&amp;quot;selector&amp;quot;:&amp;quot;.product_sort_container&amp;quot;}\n  (Session info: chrome=138.0.7204.158); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception\nStacktrace:\n\tGetHandleVerifier [0x0x7ff6fdbe6f65+78965]\n\tGetHandleVerifier [0x0x7ff6fdbe6fc0+79056]\n\t(No symbol) [0x0x7ff6fd979dda]\n\t(No symbol) [0x0x7ff6fd9d02ea]\n\t(No symbol) [0x0x7ff6fd9d059c]\n\t(No symbol) [0x0x7ff6fda23f37]\n\t(No symbol) [0x0x7ff6fd9f86af]\n\t(No symbol) [0x0x7ff6fda20dbe]\n\t(No symbol) [0x0x7ff6fd9f8443]\n\t(No symbol) [0x0x7ff6fd9c1311]\n\t(No symbol) [0x0x7ff6fd9c20a3]\n\tGetHandleVerifier [0x0x7ff6fde9e26d+2926461]\n\tGetHandleVerifier [0x0x7ff6fde98993+2903715]\n\tGetHandleVerifier [0x0x7ff6fdeb6aed+3026941]\n\tGetHandleVerifier [0x0x7ff6fdc016fe+187406]\n\tGetHandleVerifier [0x0x7ff6fdc096ef+220159]\n\tGetHandleVerifier [0x0x7ff6fdbefaf4+114692]\n\tGetHandleVerifier [0x0x7ff6fdbefca9+115129]\n\tGetHandleVerifier [0x0x7ff6fdbd64d8+10728]\n\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\n\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\n\n&#34;}], &#34;test_ecommlogin.py::test_2[data2]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data2]&#34;, &#34;duration&#34;: &#34;00:00:09&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data2]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:09&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;C:\\\\Users\\\\DELL\\\\PycharmProjects\\\\Pythonseleniumhandson\\\\pytest\\\\test_ecommlogin.py&amp;#x27;, 58, &amp;#x27;Skipped: skips:Message: no such element: Unable to locate element: {&amp;quot;method&amp;quot;:&amp;quot;css selector&amp;quot;,&amp;quot;selector&amp;quot;:&amp;quot;#finish&amp;quot;}\\n  (Session info: chrome=138.0.7204.158); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception\\nStacktrace:\\n\\tGetHandleVerifier [0x0x7ff6fdbe6f65+78965]\\n\\tGetHandleVerifier [0x0x7ff6fdbe6fc0+79056]\\n\\t(No symbol) [0x0x7ff6fd979dda]\\n\\t(No symbol) [0x0x7ff6fd9d02ea]\\n\\t(No symbol) [0x0x7ff6fd9d059c]\\n\\t(No symbol) [0x0x7ff6fda23f37]\\n\\t(No symbol) [0x0x7ff6fd9f86af]\\n\\t(No symbol) [0x0x7ff6fda20dbe]\\n\\t(No symbol) [0x0x7ff6fd9f8443]\\n\\t(No symbol) [0x0x7ff6fd9c1311]\\n\\t(No symbol) [0x0x7ff6fd9c20a3]\\n\\tGetHandleVerifier [0x0x7ff6fde9e26d+2926461]\\n\\tGetHandleVerifier [0x0x7ff6fde98993+2903715]\\n\\tGetHandleVerifier [0x0x7ff6fdeb6aed+3026941]\\n\\tGetHandleVerifier [0x0x7ff6fdc016fe+187406]\\n\\tGetHandleVerifier [0x0x7ff6fdc096ef+220159]\\n\\tGetHandleVerifier [0x0x7ff6fdbefaf4+114692]\\n\\tGetHandleVerifier [0x0x7ff6fdbefca9+115129]\\n\\tGetHandleVerifier [0x0x7ff6fdbd64d8+10728]\\n\\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\\n\\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]&amp;#x27;)\n\n----------------------------- Captured stdout call -----------------------------\nyesyesys:Message: no such element: Unable to locate element: {&amp;quot;method&amp;quot;:&amp;quot;css selector&amp;quot;,&amp;quot;selector&amp;quot;:&amp;quot;#finish&amp;quot;}\n  (Session info: chrome=138.0.7204.158); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception\nStacktrace:\n\tGetHandleVerifier [0x0x7ff6fdbe6f65+78965]\n\tGetHandleVerifier [0x0x7ff6fdbe6fc0+79056]\n\t(No symbol) [0x0x7ff6fd979dda]\n\t(No symbol) [0x0x7ff6fd9d02ea]\n\t(No symbol) [0x0x7ff6fd9d059c]\n\t(No symbol) [0x0x7ff6fda23f37]\n\t(No symbol) [0x0x7ff6fd9f86af]\n\t(No symbol) [0x0x7ff6fda20dbe]\n\t(No symbol) [0x0x7ff6fd9f8443]\n\t(No symbol) [0x0x7ff6fd9c1311]\n\t(No symbol) [0x0x7ff6fd9c20a3]\n\tGetHandleVerifier [0x0x7ff6fde9e26d+2926461]\n\tGetHandleVerifier [0x0x7ff6fde98993+2903715]\n\tGetHandleVerifier [0x0x7ff6fdeb6aed+3026941]\n\tGetHandleVerifier [0x0x7ff6fdc016fe+187406]\n\tGetHandleVerifier [0x0x7ff6fdc096ef+220159]\n\tGetHandleVerifier [0x0x7ff6fdbefaf4+114692]\n\tGetHandleVerifier [0x0x7ff6fdbefca9+115129]\n\tGetHandleVerifier [0x0x7ff6fdbd64d8+10728]\n\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\n\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\n\n&#34;}], &#34;test_ecommlogin.py::test_2[data3]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data3]&#34;, &#34;duration&#34;: &#34;00:00:27&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data3]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:27&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_ecommlogin.py::test_2[data4]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Skipped&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data4]&#34;, &#34;duration&#34;: &#34;00:00:08&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Skipped&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data4]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:08&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;(&amp;#x27;C:\\\\Users\\\\DELL\\\\PycharmProjects\\\\Pythonseleniumhandson\\\\pytest\\\\test_ecommlogin.py&amp;#x27;, 58, &amp;#x27;Skipped: skips:Alert Text: Sorting is broken! This error has been reported to Backtrace.\\nMessage: unexpected alert open: {Alert text : Sorting is broken! This error has been reported to Backtrace.}\\n  (Session info: chrome=138.0.7204.158)\\nStacktrace:\\n\\tGetHandleVerifier [0x0x7ff6fdbe6f65+78965]\\n\\tGetHandleVerifier [0x0x7ff6fdbe6fc0+79056]\\n\\t(No symbol) [0x0x7ff6fd979dda]\\n\\t(No symbol) [0x0x7ff6fda218c7]\\n\\t(No symbol) [0x0x7ff6fd9f8443]\\n\\t(No symbol) [0x0x7ff6fd9c1311]\\n\\t(No symbol) [0x0x7ff6fd9c20a3]\\n\\tGetHandleVerifier [0x0x7ff6fde9e26d+2926461]\\n\\tGetHandleVerifier [0x0x7ff6fde98993+2903715]\\n\\tGetHandleVerifier [0x0x7ff6fdeb6aed+3026941]\\n\\tGetHandleVerifier [0x0x7ff6fdc016fe+187406]\\n\\tGetHandleVerifier [0x0x7ff6fdc096ef+220159]\\n\\tGetHandleVerifier [0x0x7ff6fdbefaf4+114692]\\n\\tGetHandleVerifier [0x0x7ff6fdbefca9+115129]\\n\\tGetHandleVerifier [0x0x7ff6fdbd64d8+10728]\\n\\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\\n\\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]&amp;#x27;)\n\n----------------------------- Captured stdout call -----------------------------\nyesyesys:Alert Text: Sorting is broken! This error has been reported to Backtrace.\nMessage: unexpected alert open: {Alert text : Sorting is broken! This error has been reported to Backtrace.}\n  (Session info: chrome=138.0.7204.158)\nStacktrace:\n\tGetHandleVerifier [0x0x7ff6fdbe6f65+78965]\n\tGetHandleVerifier [0x0x7ff6fdbe6fc0+79056]\n\t(No symbol) [0x0x7ff6fd979dda]\n\t(No symbol) [0x0x7ff6fda218c7]\n\t(No symbol) [0x0x7ff6fd9f8443]\n\t(No symbol) [0x0x7ff6fd9c1311]\n\t(No symbol) [0x0x7ff6fd9c20a3]\n\tGetHandleVerifier [0x0x7ff6fde9e26d+2926461]\n\tGetHandleVerifier [0x0x7ff6fde98993+2903715]\n\tGetHandleVerifier [0x0x7ff6fdeb6aed+3026941]\n\tGetHandleVerifier [0x0x7ff6fdc016fe+187406]\n\tGetHandleVerifier [0x0x7ff6fdc096ef+220159]\n\tGetHandleVerifier [0x0x7ff6fdbefaf4+114692]\n\tGetHandleVerifier [0x0x7ff6fdbefca9+115129]\n\tGetHandleVerifier [0x0x7ff6fdbd64d8+10728]\n\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\n\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\n\n&#34;}], &#34;test_ecommlogin.py::test_2[data5]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data5]&#34;, &#34;duration&#34;: &#34;00:00:12&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data5]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:12&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_login.py::test_1[data0]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_login.py::test_1[data0]&#34;, &#34;duration&#34;: &#34;00:00:20&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_login.py::test_1[data0]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:20&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_login.py::test_1[data1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_login.py::test_1[data1]&#34;, &#34;duration&#34;: &#34;00:00:19&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_login.py::test_1[data1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:19&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;report.html&#34;}"></div>
+    <div id="data-container" data-jsonblob="{&#34;environment&#34;: {&#34;Python&#34;: &#34;3.9.5&#34;, &#34;Platform&#34;: &#34;Windows-10-10.0.26100-SP0&#34;, &#34;Packages&#34;: {&#34;pytest&#34;: &#34;8.4.1&#34;, &#34;pluggy&#34;: &#34;1.6.0&#34;}, &#34;Plugins&#34;: {&#34;html&#34;: &#34;4.1.1&#34;, &#34;metadata&#34;: &#34;3.1.1&#34;}, &#34;JAVA_HOME&#34;: &#34;C:\\Program Files\\Java\\jdk-17.x.x\\&#34;}, &#34;tests&#34;: {&#34;test_ecommlogin.py::test_2[data0]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data0]&#34;, &#34;duration&#34;: &#34;00:00:13&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data0]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:13&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_ecommlogin.py::test_2[data1]&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div&gt;&lt;img src=\&#34;test_ecommlogin.py_test_2[data1].png\&#34; alt=\&#34;screenshot\&#34; style=\&#34;width:304px;height:228px;\&#34; onclick=\&#34;window.open(this.src)\&#34; align=\&#34;right\&#34;/&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data1]&#34;, &#34;duration&#34;: &#34;00:00:18&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:18&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;data = {&amp;#x27;username&amp;#x27;: &amp;#x27;locked_out_user&amp;#x27;}, driver = &amp;lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&amp;quot;3d8aec54f8d2e359b7f1a0b21584281e&amp;quot;)&amp;gt;\n\n    @pytest.mark.parametrize(&amp;quot;data&amp;quot;,datass)\n    def test_2(data,driver):\n        from selenium.webdriver.common.by import By\n        driver.get(&amp;quot;https://www.saucedemo.com/&amp;quot;)\n        driver.find_element(By.XPATH, &amp;quot;//div/input[@placeholder=&amp;#x27;Username&amp;#x27;]&amp;quot;).send_keys(data[&amp;quot;username&amp;quot;])\n        driver.find_element(By.XPATH, &amp;quot;//input[@type=&amp;#x27;password&amp;#x27;]&amp;quot;).send_keys(&amp;quot;secret_sauce&amp;quot;)\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;.submit-button&amp;quot;).click()\n        time.sleep(2)\n        # shopping_page\n&amp;gt;       driver.find_element(By.CSS_SELECTOR, &amp;quot;.product_sort_container&amp;quot;).click()\n\ntest_ecommlogin.py:23: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\webdriver.py:922: in find_element\n    return self.execute(Command.FIND_ELEMENT, {&amp;quot;using&amp;quot;: by, &amp;quot;value&amp;quot;: value})[&amp;quot;value&amp;quot;]\n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\webdriver.py:454: in execute\n    self.error_handler.check_response(response)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = &amp;lt;selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x0000018AFFD85700&amp;gt;\nresponse = {&amp;#x27;status&amp;#x27;: 404, &amp;#x27;value&amp;#x27;: &amp;#x27;{&amp;quot;value&amp;quot;:{&amp;quot;error&amp;quot;:&amp;quot;no such element&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;no such element: Unable to locate element: {\\...ff622b964d8+10728]\\\\n\\\\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\\\\n\\\\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\\\\n&amp;quot;}}&amp;#x27;}\n\n    def check_response(self, response: dict[str, Any]) -&amp;gt; None:\n        &amp;quot;&amp;quot;&amp;quot;Checks that a JSON response from the WebDriver does not have an\n        error.\n    \n        :Args:\n         - response - The JSON response from the WebDriver server as a dictionary\n           object.\n    \n        :Raises: If the response contains an error message.\n        &amp;quot;&amp;quot;&amp;quot;\n        status = response.get(&amp;quot;status&amp;quot;, None)\n        if not status or status == ErrorCode.SUCCESS:\n            return\n        value = None\n        message = response.get(&amp;quot;message&amp;quot;, &amp;quot;&amp;quot;)\n        screen: str = response.get(&amp;quot;screen&amp;quot;, &amp;quot;&amp;quot;)\n        stacktrace = None\n        if isinstance(status, int):\n            value_json = response.get(&amp;quot;value&amp;quot;, None)\n            if value_json and isinstance(value_json, str):\n                try:\n                    value = json.loads(value_json)\n                    if isinstance(value, dict):\n                        if len(value) == 1:\n                            value = value[&amp;quot;value&amp;quot;]\n                        status = value.get(&amp;quot;error&amp;quot;, None)\n                        if not status:\n                            status = value.get(&amp;quot;status&amp;quot;, ErrorCode.UNKNOWN_ERROR)\n                            message = value.get(&amp;quot;value&amp;quot;) or value.get(&amp;quot;message&amp;quot;)\n                            if not isinstance(message, str):\n                                value = message\n                                message = message.get(&amp;quot;message&amp;quot;)\n                        else:\n                            message = value.get(&amp;quot;message&amp;quot;, None)\n                except ValueError:\n                    pass\n    \n        exception_class: type[WebDriverException]\n        e = ErrorCode()\n        error_codes = [item for item in dir(e) if not item.startswith(&amp;quot;__&amp;quot;)]\n        for error_code in error_codes:\n            error_info = getattr(ErrorCode, error_code)\n            if isinstance(error_info, list) and status in error_info:\n                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)\n                break\n        else:\n            exception_class = WebDriverException\n    \n        if not value:\n            value = response[&amp;quot;value&amp;quot;]\n        if isinstance(value, str):\n            raise exception_class(value)\n        if message == &amp;quot;&amp;quot; and &amp;quot;message&amp;quot; in value:\n            message = value[&amp;quot;message&amp;quot;]\n    \n        screen = None  # type: ignore[assignment]\n        if &amp;quot;screen&amp;quot; in value:\n            screen = value[&amp;quot;screen&amp;quot;]\n    \n        stacktrace = None\n        st_value = value.get(&amp;quot;stackTrace&amp;quot;) or value.get(&amp;quot;stacktrace&amp;quot;)\n        if st_value:\n            if isinstance(st_value, str):\n                stacktrace = st_value.split(&amp;quot;\\n&amp;quot;)\n            else:\n                stacktrace = []\n                try:\n                    for frame in st_value:\n                        line = frame.get(&amp;quot;lineNumber&amp;quot;, &amp;quot;&amp;quot;)\n                        file = frame.get(&amp;quot;fileName&amp;quot;, &amp;quot;&amp;lt;anonymous&amp;gt;&amp;quot;)\n                        if line:\n                            file = f&amp;quot;{file}:{line}&amp;quot;\n                        meth = frame.get(&amp;quot;methodName&amp;quot;, &amp;quot;&amp;lt;anonymous&amp;gt;&amp;quot;)\n                        if &amp;quot;className&amp;quot; in frame:\n                            meth = f&amp;quot;{frame[&amp;#x27;className&amp;#x27;]}.{meth}&amp;quot;\n                        msg = &amp;quot;    at %s (%s)&amp;quot;\n                        msg = msg % (meth, file)\n                        stacktrace.append(msg)\n                except TypeError:\n                    pass\n        if exception_class == UnexpectedAlertPresentException:\n            alert_text = None\n            if &amp;quot;data&amp;quot; in value:\n                alert_text = value[&amp;quot;data&amp;quot;].get(&amp;quot;text&amp;quot;)\n            elif &amp;quot;alert&amp;quot; in value:\n                alert_text = value[&amp;quot;alert&amp;quot;].get(&amp;quot;text&amp;quot;)\n            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here\n&amp;gt;       raise exception_class(message, screen, stacktrace)\nE       selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {&amp;quot;method&amp;quot;:&amp;quot;css selector&amp;quot;,&amp;quot;selector&amp;quot;:&amp;quot;.product_sort_container&amp;quot;}\nE         (Session info: chrome=138.0.7204.158); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception\nE       Stacktrace:\nE       \tGetHandleVerifier [0x0x7ff622ba6f65+78965]\nE       \tGetHandleVerifier [0x0x7ff622ba6fc0+79056]\nE       \t(No symbol) [0x0x7ff622939dda]\nE       \t(No symbol) [0x0x7ff6229902ea]\nE       \t(No symbol) [0x0x7ff62299059c]\nE       \t(No symbol) [0x0x7ff6229e3f37]\nE       \t(No symbol) [0x0x7ff6229b86af]\nE       \t(No symbol) [0x0x7ff6229e0dbe]\nE       \t(No symbol) [0x0x7ff6229b8443]\nE       \t(No symbol) [0x0x7ff622981311]\nE       \t(No symbol) [0x0x7ff6229820a3]\nE       \tGetHandleVerifier [0x0x7ff622e5e26d+2926461]\nE       \tGetHandleVerifier [0x0x7ff622e58993+2903715]\nE       \tGetHandleVerifier [0x0x7ff622e76aed+3026941]\nE       \tGetHandleVerifier [0x0x7ff622bc16fe+187406]\nE       \tGetHandleVerifier [0x0x7ff622bc96ef+220159]\nE       \tGetHandleVerifier [0x0x7ff622bafaf4+114692]\nE       \tGetHandleVerifier [0x0x7ff622bafca9+115129]\nE       \tGetHandleVerifier [0x0x7ff622b964d8+10728]\nE       \tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\nE       \tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\n\n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\errorhandler.py:232: NoSuchElementException\n&#34;}], &#34;test_ecommlogin.py::test_2[data2]&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div&gt;&lt;img src=\&#34;test_ecommlogin.py_test_2[data2].png\&#34; alt=\&#34;screenshot\&#34; style=\&#34;width:304px;height:228px;\&#34; onclick=\&#34;window.open(this.src)\&#34; align=\&#34;right\&#34;/&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data2]&#34;, &#34;duration&#34;: &#34;00:00:19&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data2]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:19&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;data = {&amp;#x27;username&amp;#x27;: &amp;#x27;problem_user&amp;#x27;}, driver = &amp;lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&amp;quot;f277499491b45b0d43db6b5e45113ff3&amp;quot;)&amp;gt;\n\n    @pytest.mark.parametrize(&amp;quot;data&amp;quot;,datass)\n    def test_2(data,driver):\n        from selenium.webdriver.common.by import By\n        driver.get(&amp;quot;https://www.saucedemo.com/&amp;quot;)\n        driver.find_element(By.XPATH, &amp;quot;//div/input[@placeholder=&amp;#x27;Username&amp;#x27;]&amp;quot;).send_keys(data[&amp;quot;username&amp;quot;])\n        driver.find_element(By.XPATH, &amp;quot;//input[@type=&amp;#x27;password&amp;#x27;]&amp;quot;).send_keys(&amp;quot;secret_sauce&amp;quot;)\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;.submit-button&amp;quot;).click()\n        time.sleep(2)\n        # shopping_page\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;.product_sort_container&amp;quot;).click()\n        driver.find_element(By.XPATH, &amp;quot;//option[text()=&amp;#x27;Price (high to low)&amp;#x27;]&amp;quot;).click()\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;#add-to-cart-sauce-labs-fleece-jacket&amp;quot;).click()\n        # a=driver.find_element(By.XPATH,&amp;quot;//div[text()=&amp;#x27;29.99&amp;#x27;]&amp;quot;).text\n        # print(a)\n        # assert a==&amp;quot;$29.99&amp;quot;\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;button[name=&amp;#x27;add-to-cart-sauce-labs-backpack&amp;#x27;]&amp;quot;).click()\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;a[class=&amp;#x27;shopping_cart_link&amp;#x27;]&amp;quot;).click()\n        driver.find_element(By.XPATH, &amp;quot;//button[text()=&amp;#x27;Checkout&amp;#x27;]&amp;quot;).click()\n        driver.find_element(By.XPATH, &amp;quot;//input[@name=&amp;#x27;firstName&amp;#x27;]&amp;quot;).send_keys(&amp;quot;Akshay&amp;quot;)\n        driver.find_element(By.XPATH, &amp;quot;//input[@name=&amp;#x27;lastName&amp;#x27;]&amp;quot;).send_keys(&amp;quot;Prakash&amp;quot;)\n        driver.find_element(By.XPATH, &amp;quot;//input[@name=&amp;#x27;postalCode&amp;#x27;]&amp;quot;).send_keys(&amp;quot;600024&amp;quot;)\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;#continue&amp;quot;).click()\n&amp;gt;       driver.find_element(By.CSS_SELECTOR, &amp;quot;#finish&amp;quot;).click()\n\ntest_ecommlogin.py:36: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\webdriver.py:922: in find_element\n    return self.execute(Command.FIND_ELEMENT, {&amp;quot;using&amp;quot;: by, &amp;quot;value&amp;quot;: value})[&amp;quot;value&amp;quot;]\n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\webdriver.py:454: in execute\n    self.error_handler.check_response(response)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = &amp;lt;selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x0000018AFFDAFC70&amp;gt;\nresponse = {&amp;#x27;status&amp;#x27;: 404, &amp;#x27;value&amp;#x27;: &amp;#x27;{&amp;quot;value&amp;quot;:{&amp;quot;error&amp;quot;:&amp;quot;no such element&amp;quot;,&amp;quot;message&amp;quot;:&amp;quot;no such element: Unable to locate element: {\\...ff622b964d8+10728]\\\\n\\\\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\\\\n\\\\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\\\\n&amp;quot;}}&amp;#x27;}\n\n    def check_response(self, response: dict[str, Any]) -&amp;gt; None:\n        &amp;quot;&amp;quot;&amp;quot;Checks that a JSON response from the WebDriver does not have an\n        error.\n    \n        :Args:\n         - response - The JSON response from the WebDriver server as a dictionary\n           object.\n    \n        :Raises: If the response contains an error message.\n        &amp;quot;&amp;quot;&amp;quot;\n        status = response.get(&amp;quot;status&amp;quot;, None)\n        if not status or status == ErrorCode.SUCCESS:\n            return\n        value = None\n        message = response.get(&amp;quot;message&amp;quot;, &amp;quot;&amp;quot;)\n        screen: str = response.get(&amp;quot;screen&amp;quot;, &amp;quot;&amp;quot;)\n        stacktrace = None\n        if isinstance(status, int):\n            value_json = response.get(&amp;quot;value&amp;quot;, None)\n            if value_json and isinstance(value_json, str):\n                try:\n                    value = json.loads(value_json)\n                    if isinstance(value, dict):\n                        if len(value) == 1:\n                            value = value[&amp;quot;value&amp;quot;]\n                        status = value.get(&amp;quot;error&amp;quot;, None)\n                        if not status:\n                            status = value.get(&amp;quot;status&amp;quot;, ErrorCode.UNKNOWN_ERROR)\n                            message = value.get(&amp;quot;value&amp;quot;) or value.get(&amp;quot;message&amp;quot;)\n                            if not isinstance(message, str):\n                                value = message\n                                message = message.get(&amp;quot;message&amp;quot;)\n                        else:\n                            message = value.get(&amp;quot;message&amp;quot;, None)\n                except ValueError:\n                    pass\n    \n        exception_class: type[WebDriverException]\n        e = ErrorCode()\n        error_codes = [item for item in dir(e) if not item.startswith(&amp;quot;__&amp;quot;)]\n        for error_code in error_codes:\n            error_info = getattr(ErrorCode, error_code)\n            if isinstance(error_info, list) and status in error_info:\n                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)\n                break\n        else:\n            exception_class = WebDriverException\n    \n        if not value:\n            value = response[&amp;quot;value&amp;quot;]\n        if isinstance(value, str):\n            raise exception_class(value)\n        if message == &amp;quot;&amp;quot; and &amp;quot;message&amp;quot; in value:\n            message = value[&amp;quot;message&amp;quot;]\n    \n        screen = None  # type: ignore[assignment]\n        if &amp;quot;screen&amp;quot; in value:\n            screen = value[&amp;quot;screen&amp;quot;]\n    \n        stacktrace = None\n        st_value = value.get(&amp;quot;stackTrace&amp;quot;) or value.get(&amp;quot;stacktrace&amp;quot;)\n        if st_value:\n            if isinstance(st_value, str):\n                stacktrace = st_value.split(&amp;quot;\\n&amp;quot;)\n            else:\n                stacktrace = []\n                try:\n                    for frame in st_value:\n                        line = frame.get(&amp;quot;lineNumber&amp;quot;, &amp;quot;&amp;quot;)\n                        file = frame.get(&amp;quot;fileName&amp;quot;, &amp;quot;&amp;lt;anonymous&amp;gt;&amp;quot;)\n                        if line:\n                            file = f&amp;quot;{file}:{line}&amp;quot;\n                        meth = frame.get(&amp;quot;methodName&amp;quot;, &amp;quot;&amp;lt;anonymous&amp;gt;&amp;quot;)\n                        if &amp;quot;className&amp;quot; in frame:\n                            meth = f&amp;quot;{frame[&amp;#x27;className&amp;#x27;]}.{meth}&amp;quot;\n                        msg = &amp;quot;    at %s (%s)&amp;quot;\n                        msg = msg % (meth, file)\n                        stacktrace.append(msg)\n                except TypeError:\n                    pass\n        if exception_class == UnexpectedAlertPresentException:\n            alert_text = None\n            if &amp;quot;data&amp;quot; in value:\n                alert_text = value[&amp;quot;data&amp;quot;].get(&amp;quot;text&amp;quot;)\n            elif &amp;quot;alert&amp;quot; in value:\n                alert_text = value[&amp;quot;alert&amp;quot;].get(&amp;quot;text&amp;quot;)\n            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here\n&amp;gt;       raise exception_class(message, screen, stacktrace)\nE       selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {&amp;quot;method&amp;quot;:&amp;quot;css selector&amp;quot;,&amp;quot;selector&amp;quot;:&amp;quot;#finish&amp;quot;}\nE         (Session info: chrome=138.0.7204.158); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception\nE       Stacktrace:\nE       \tGetHandleVerifier [0x0x7ff622ba6f65+78965]\nE       \tGetHandleVerifier [0x0x7ff622ba6fc0+79056]\nE       \t(No symbol) [0x0x7ff622939dda]\nE       \t(No symbol) [0x0x7ff6229902ea]\nE       \t(No symbol) [0x0x7ff62299059c]\nE       \t(No symbol) [0x0x7ff6229e3f37]\nE       \t(No symbol) [0x0x7ff6229b86af]\nE       \t(No symbol) [0x0x7ff6229e0dbe]\nE       \t(No symbol) [0x0x7ff6229b8443]\nE       \t(No symbol) [0x0x7ff622981311]\nE       \t(No symbol) [0x0x7ff6229820a3]\nE       \tGetHandleVerifier [0x0x7ff622e5e26d+2926461]\nE       \tGetHandleVerifier [0x0x7ff622e58993+2903715]\nE       \tGetHandleVerifier [0x0x7ff622e76aed+3026941]\nE       \tGetHandleVerifier [0x0x7ff622bc16fe+187406]\nE       \tGetHandleVerifier [0x0x7ff622bc96ef+220159]\nE       \tGetHandleVerifier [0x0x7ff622bafaf4+114692]\nE       \tGetHandleVerifier [0x0x7ff622bafca9+115129]\nE       \tGetHandleVerifier [0x0x7ff622b964d8+10728]\nE       \tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\nE       \tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\n\n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\errorhandler.py:232: NoSuchElementException\n&#34;}], &#34;test_ecommlogin.py::test_2[data3]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data3]&#34;, &#34;duration&#34;: &#34;00:00:27&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data3]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:27&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_ecommlogin.py::test_2[data4]&#34;: [{&#34;extras&#34;: [{&#34;name&#34;: null, &#34;format_type&#34;: &#34;html&#34;, &#34;content&#34;: &#34;&lt;div&gt;&lt;img src=\&#34;test_ecommlogin.py_test_2[data4].png\&#34; alt=\&#34;screenshot\&#34; style=\&#34;width:304px;height:228px;\&#34; onclick=\&#34;window.open(this.src)\&#34; align=\&#34;right\&#34;/&gt;&lt;/div&gt;&#34;, &#34;mime_type&#34;: null, &#34;extension&#34;: null}], &#34;result&#34;: &#34;Failed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data4]&#34;, &#34;duration&#34;: &#34;00:00:08&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Failed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data4]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:08&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;data = {&amp;#x27;username&amp;#x27;: &amp;#x27;error_user&amp;#x27;}, driver = &amp;lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&amp;quot;dd49ecce548df96b51443e28fa6d4c52&amp;quot;)&amp;gt;\n\n    @pytest.mark.parametrize(&amp;quot;data&amp;quot;,datass)\n    def test_2(data,driver):\n        from selenium.webdriver.common.by import By\n        driver.get(&amp;quot;https://www.saucedemo.com/&amp;quot;)\n        driver.find_element(By.XPATH, &amp;quot;//div/input[@placeholder=&amp;#x27;Username&amp;#x27;]&amp;quot;).send_keys(data[&amp;quot;username&amp;quot;])\n        driver.find_element(By.XPATH, &amp;quot;//input[@type=&amp;#x27;password&amp;#x27;]&amp;quot;).send_keys(&amp;quot;secret_sauce&amp;quot;)\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;.submit-button&amp;quot;).click()\n        time.sleep(2)\n        # shopping_page\n        driver.find_element(By.CSS_SELECTOR, &amp;quot;.product_sort_container&amp;quot;).click()\n        driver.find_element(By.XPATH, &amp;quot;//option[text()=&amp;#x27;Price (high to low)&amp;#x27;]&amp;quot;).click()\n&amp;gt;       driver.find_element(By.CSS_SELECTOR, &amp;quot;#add-to-cart-sauce-labs-fleece-jacket&amp;quot;).click()\n\ntest_ecommlogin.py:25: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\webdriver.py:922: in find_element\n    return self.execute(Command.FIND_ELEMENT, {&amp;quot;using&amp;quot;: by, &amp;quot;value&amp;quot;: value})[&amp;quot;value&amp;quot;]\n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\webdriver.py:454: in execute\n    self.error_handler.check_response(response)\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nself = &amp;lt;selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x0000018AFFE56BB0&amp;gt;\nresponse = {&amp;#x27;status&amp;#x27;: 500, &amp;#x27;value&amp;#x27;: &amp;#x27;{&amp;quot;value&amp;quot;:{&amp;quot;data&amp;quot;:{&amp;quot;text&amp;quot;:&amp;quot;Sorting is broken! This error has been reported to Backtrace.&amp;quot;},&amp;quot;e...ff622b964d8+10728]\\\\n\\\\tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\\\\n\\\\tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\\\\n&amp;quot;}}&amp;#x27;}\n\n    def check_response(self, response: dict[str, Any]) -&amp;gt; None:\n        &amp;quot;&amp;quot;&amp;quot;Checks that a JSON response from the WebDriver does not have an\n        error.\n    \n        :Args:\n         - response - The JSON response from the WebDriver server as a dictionary\n           object.\n    \n        :Raises: If the response contains an error message.\n        &amp;quot;&amp;quot;&amp;quot;\n        status = response.get(&amp;quot;status&amp;quot;, None)\n        if not status or status == ErrorCode.SUCCESS:\n            return\n        value = None\n        message = response.get(&amp;quot;message&amp;quot;, &amp;quot;&amp;quot;)\n        screen: str = response.get(&amp;quot;screen&amp;quot;, &amp;quot;&amp;quot;)\n        stacktrace = None\n        if isinstance(status, int):\n            value_json = response.get(&amp;quot;value&amp;quot;, None)\n            if value_json and isinstance(value_json, str):\n                try:\n                    value = json.loads(value_json)\n                    if isinstance(value, dict):\n                        if len(value) == 1:\n                            value = value[&amp;quot;value&amp;quot;]\n                        status = value.get(&amp;quot;error&amp;quot;, None)\n                        if not status:\n                            status = value.get(&amp;quot;status&amp;quot;, ErrorCode.UNKNOWN_ERROR)\n                            message = value.get(&amp;quot;value&amp;quot;) or value.get(&amp;quot;message&amp;quot;)\n                            if not isinstance(message, str):\n                                value = message\n                                message = message.get(&amp;quot;message&amp;quot;)\n                        else:\n                            message = value.get(&amp;quot;message&amp;quot;, None)\n                except ValueError:\n                    pass\n    \n        exception_class: type[WebDriverException]\n        e = ErrorCode()\n        error_codes = [item for item in dir(e) if not item.startswith(&amp;quot;__&amp;quot;)]\n        for error_code in error_codes:\n            error_info = getattr(ErrorCode, error_code)\n            if isinstance(error_info, list) and status in error_info:\n                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)\n                break\n        else:\n            exception_class = WebDriverException\n    \n        if not value:\n            value = response[&amp;quot;value&amp;quot;]\n        if isinstance(value, str):\n            raise exception_class(value)\n        if message == &amp;quot;&amp;quot; and &amp;quot;message&amp;quot; in value:\n            message = value[&amp;quot;message&amp;quot;]\n    \n        screen = None  # type: ignore[assignment]\n        if &amp;quot;screen&amp;quot; in value:\n            screen = value[&amp;quot;screen&amp;quot;]\n    \n        stacktrace = None\n        st_value = value.get(&amp;quot;stackTrace&amp;quot;) or value.get(&amp;quot;stacktrace&amp;quot;)\n        if st_value:\n            if isinstance(st_value, str):\n                stacktrace = st_value.split(&amp;quot;\\n&amp;quot;)\n            else:\n                stacktrace = []\n                try:\n                    for frame in st_value:\n                        line = frame.get(&amp;quot;lineNumber&amp;quot;, &amp;quot;&amp;quot;)\n                        file = frame.get(&amp;quot;fileName&amp;quot;, &amp;quot;&amp;lt;anonymous&amp;gt;&amp;quot;)\n                        if line:\n                            file = f&amp;quot;{file}:{line}&amp;quot;\n                        meth = frame.get(&amp;quot;methodName&amp;quot;, &amp;quot;&amp;lt;anonymous&amp;gt;&amp;quot;)\n                        if &amp;quot;className&amp;quot; in frame:\n                            meth = f&amp;quot;{frame[&amp;#x27;className&amp;#x27;]}.{meth}&amp;quot;\n                        msg = &amp;quot;    at %s (%s)&amp;quot;\n                        msg = msg % (meth, file)\n                        stacktrace.append(msg)\n                except TypeError:\n                    pass\n        if exception_class == UnexpectedAlertPresentException:\n            alert_text = None\n            if &amp;quot;data&amp;quot; in value:\n                alert_text = value[&amp;quot;data&amp;quot;].get(&amp;quot;text&amp;quot;)\n            elif &amp;quot;alert&amp;quot; in value:\n                alert_text = value[&amp;quot;alert&amp;quot;].get(&amp;quot;text&amp;quot;)\n&amp;gt;           raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here\nE           selenium.common.exceptions.UnexpectedAlertPresentException: Alert Text: Sorting is broken! This error has been reported to Backtrace.\nE           Message: unexpected alert open: {Alert text : Sorting is broken! This error has been reported to Backtrace.}\nE             (Session info: chrome=138.0.7204.158)\nE           Stacktrace:\nE           \tGetHandleVerifier [0x0x7ff622ba6f65+78965]\nE           \tGetHandleVerifier [0x0x7ff622ba6fc0+79056]\nE           \t(No symbol) [0x0x7ff622939dda]\nE           \t(No symbol) [0x0x7ff6229e18c7]\nE           \t(No symbol) [0x0x7ff6229b8443]\nE           \t(No symbol) [0x0x7ff622981311]\nE           \t(No symbol) [0x0x7ff6229820a3]\nE           \tGetHandleVerifier [0x0x7ff622e5e26d+2926461]\nE           \tGetHandleVerifier [0x0x7ff622e58993+2903715]\nE           \tGetHandleVerifier [0x0x7ff622e76aed+3026941]\nE           \tGetHandleVerifier [0x0x7ff622bc16fe+187406]\nE           \tGetHandleVerifier [0x0x7ff622bc96ef+220159]\nE           \tGetHandleVerifier [0x0x7ff622bafaf4+114692]\nE           \tGetHandleVerifier [0x0x7ff622bafca9+115129]\nE           \tGetHandleVerifier [0x0x7ff622b964d8+10728]\nE           \tBaseThreadInitThunk [0x0x7ffe7d79e8d7+23]\nE           \tRtlUserThreadStart [0x0x7ffe7e07c34c+44]\n\n..\\venv\\lib\\site-packages\\selenium\\webdriver\\remote\\errorhandler.py:231: UnexpectedAlertPresentException\n&#34;}], &#34;test_ecommlogin.py::test_2[data5]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_ecommlogin.py::test_2[data5]&#34;, &#34;duration&#34;: &#34;00:00:12&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_ecommlogin.py::test_2[data5]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:12&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_login.py::test_1[data0]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_login.py::test_1[data0]&#34;, &#34;duration&#34;: &#34;00:00:20&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_login.py::test_1[data0]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:20&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}], &#34;test_login.py::test_1[data1]&#34;: [{&#34;extras&#34;: [], &#34;result&#34;: &#34;Passed&#34;, &#34;testId&#34;: &#34;test_login.py::test_1[data1]&#34;, &#34;duration&#34;: &#34;00:00:19&#34;, &#34;resultsTableRow&#34;: [&#34;&lt;td class=\&#34;col-result\&#34;&gt;Passed&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-testId\&#34;&gt;test_login.py::test_1[data1]&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-duration\&#34;&gt;00:00:19&lt;/td&gt;&#34;, &#34;&lt;td class=\&#34;col-links\&#34;&gt;&lt;/td&gt;&#34;], &#34;log&#34;: &#34;No log output captured.&#34;}]}, &#34;renderCollapsed&#34;: [&#34;passed&#34;], &#34;initialSort&#34;: &#34;result&#34;, &#34;title&#34;: &#34;report.html&#34;}"></div>
     <script>
       (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const { getCollapsedCategory, setCollapsedIds } = require('./storage.js')
